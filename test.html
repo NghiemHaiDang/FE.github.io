@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="ytplayer"></div>
+    <button onclick="myFunction1()" href="">Tạo ghi chú</button>
+    <p>Nội dung ghi chú:</p>
+    <p style="display:none;" id="time">
+
+    </p>
+    <ul style="list-style-type: none ;" id="list_note">
+        <li>
+
+        </li>
+    </ul>
+    <textarea id="note" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+    <button onclick="Save()" href="">Lưu ghi chú</button>
+    <script>
+        // 1. ytplayer code: https://developers.google.com/youtube/player_parameters#IFrame_Player_API
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/player_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        var player;
+        function onYouTubePlayerAPIReady() {
+            player = new YT.Player('ytplayer', {
+                height: '360',
+                width: '640',
+                videoId: 'yRLs3j4x2cw'
+            });
+        }
+        // 2. get player.playerInfo.currentTime
+        var list_time = new Array();
+        let list_note = document.getElementById("list_note");
+        let listItemsJSON = localStorage.getItem('id');
+        let list_note_JSON = listItemsJSON ? JSON.parse(listItemsJSON) : [];
+        for (let i = 0; i < list_note_JSON.length; i++) {
+            let li = document.createElement('li');
+            li.innerHTML = list_note_JSON[i];
+            list_note.appendChild(li);
+        }
+
+        function myFunction() {
+            var tm = document.getElementById("time").innerHTML = player.playerInfo.currentTime;
+            var note = document.getElementById("note");
+            var text_note = note.value;
+            list_time.push(tm);
+            let li = document.createElement('li');
+            li.innerHTML = "Thời Gian: " + tm + " : " + text_note;
+            list_note.appendChild(li);
+            let text_JSON = "Thời Gian: " + tm + " : " + text_note;
+            list_note_JSON.push(text_JSON);
+            localStorage.setItem('id', JSON.stringify(list_note_JSON));
+            text_JSON = "";
+        }
+
+
+
+        function myFunction1() {
+            var result = confirm("Bạn có muốn lưu ghi chú?");
+            if (result) {
+                myFunction1();
+            } else {
+                alert("Bye!");
+            }
+        }
+
+
+        // function addItems() {
+        //     let item = document.getElementById("time");
+        //     console.log(item.innerHTML);
+        // }
+
+
+    </script>
+</body>
+
+</html>
